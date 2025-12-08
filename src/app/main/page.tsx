@@ -3,14 +3,24 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 
-const ClubLogo = () => (
+const ClubLogo = ({
+  style,
+  innerRef,
+  onLoaded,
+}: {
+  style?: React.CSSProperties;
+  innerRef?: React.RefObject<HTMLDivElement>;
+  onLoaded?: () => void;
+}) => (
   <div
+    ref={innerRef}
     style={{
       position: 'absolute',
       left: '50%',
-      top: 150,
+      top: style?.top ?? 150,
       transform: 'translateX(-50%)',
       zIndex: 12,
+      ...style,
     }}
   >
     <Image
@@ -20,18 +30,29 @@ const ClubLogo = () => (
       height={180}
       style={{ width: '90vw', maxWidth: 800, height: 'auto', display: 'block' }}
       priority
+      onLoadingComplete={onLoaded}
     />
   </div>
 );
 
-const Cube = () => (
+const Cube = ({
+  style,
+  innerRef,
+  onLoaded,
+}: {
+  style?: React.CSSProperties;
+  innerRef?: React.RefObject<HTMLDivElement>;
+  onLoaded?: () => void;
+}) => (
   <div
+    ref={innerRef}
     style={{
       position: 'absolute',
       left: '50%',
-      top: 280,
-      transform: 'translateX(-50%)',
+      top: style?.top ?? 280,
+      transform: style?.transform ?? 'translateX(-50%)',
       zIndex: 11,
+      ...style,
     }}
   >
     <Image
@@ -39,8 +60,9 @@ const Cube = () => (
       alt="Microsoft Innovations Club Logo"
       width={700}
       height={180}
-      style={{ width: '90vw', maxWidth: 700, height: 'auto', display: 'block' }}
+      style={{ width: '90vw', maxWidth: 700, maxHeight: (style && (style as any).maxHeight) || undefined, height: 'auto', display: 'block' }}
       priority
+      onLoadingComplete={onLoaded}
     />
   </div>
 );
@@ -113,6 +135,14 @@ const Clouds = ({ clouds }: { clouds: { top: number; left: number }[] }) => (
 
 const LandingPage = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
+  // Refs for measuring rendered sizes
+  const logoRef = useRef<HTMLDivElement | null>(null);
+  const cubeRef = useRef<HTMLDivElement | null>(null);
+
+  // Dynamic positions (pixels or CSS values)
+  const [logoTop, setLogoTop] = useState<number | string>(150);
+  const [cubeTop, setCubeTop] = useState<number | string>(280);
+  const [cubeMaxHeight, setCubeMaxHeight] = useState<string>('55vh');
 
   const cloudPositions = [
     { baseTop: 154, baseLeft: -12, amplitude: 25, speed: 0.8, phase: 0 },
@@ -127,11 +157,23 @@ const LandingPage = () => {
     { baseTop: 600, baseLeft: 1600, amplitude: 22, speed: 1.05, phase: 6 },
   ].map(useCloudFloat);
 
+  // Compute responsive positions rather than forcing body overflow
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto"; 
-    };
+    function updatePositions() {
+      const vh = window.innerHeight;
+      const logoHeight = logoRef.current?.offsetHeight ?? 180;
+      const baseLogoTop = Math.max(Math.round(vh * 0.06), 48); // at least 48px from top
+      const spacing = Math.max(Math.round(vh * 0.04), 24);
+      const computedCubeTop = baseLogoTop + logoHeight + spacing;
+      setLogoTop(baseLogoTop);
+      setCubeTop(computedCubeTop);
+      // Make cube responsive but never larger than ~60% of viewport height
+      setCubeMaxHeight('60vh');
+    }
+
+    updatePositions();
+    window.addEventListener('resize', updatePositions);
+    return () => window.removeEventListener('resize', updatePositions);
   }, []);
 
    const getThemeColors = () => {
@@ -157,7 +199,7 @@ const LandingPage = () => {
       }, []);
 
   return (
-    <div className="w-full min-h-screen flex flex-col  relative overflow-hidden" style={{
+    <div className="w-full min-h-screen flex flex-col  relative overflow-visible" style={{
               backgroundImage: `
                 linear-gradient(to right, ${themeColors.gridOpacity} 1px, transparent 1px),
                 linear-gradient(to bottom, ${themeColors.gridOpacity} 1px, transparent 1px),
@@ -231,8 +273,37 @@ const LandingPage = () => {
       </a>
 
       <Clouds clouds={cloudPositions} />
-      <ClubLogo />
-      <Cube />
+      <ClubLogo
+        innerRef={logoRef}
+        style={{ top: typeof logoTop === 'number' ? `${logoTop}px` : logoTop }}
+        onLoaded={() => {
+          // Recompute positions after logo finishes loading
+          const vh = window.innerHeight;
+          const logoHeight = logoRef.current?.offsetHeight ?? 180;
+          const baseLogoTop = Math.max(Math.round(vh * 0.06), 48);
+          const spacing = Math.max(Math.round(vh * 0.04), 24);
+          setLogoTop(baseLogoTop);
+          setCubeTop(baseLogoTop + logoHeight + spacing);
+        }}
+      />
+
+      <Cube
+        innerRef={cubeRef}
+        style={{
+          top: typeof cubeTop === 'number' ? `${cubeTop}px` : cubeTop,
+          transform: 'translate(-50%, 0)',
+          maxHeight: cubeMaxHeight,
+          overflow: 'visible',
+        }}
+        onLoaded={() => {
+          // Ensure cube remains within viewport after it loads
+          const vh = window.innerHeight;
+          const logoHeight = logoRef.current?.offsetHeight ?? 180;
+          const baseLogoTop = typeof logoTop === 'number' ? logoTop : Math.max(Math.round(vh * 0.06), 48);
+          const spacing = Math.max(Math.round(vh * 0.04), 24);
+          setCubeTop(baseLogoTop + logoHeight + spacing);
+        }}
+      />
     </div>
     </div>
   );
