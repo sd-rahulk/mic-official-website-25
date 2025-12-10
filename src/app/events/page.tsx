@@ -52,10 +52,10 @@ const events = [
     title: "MLSA Explained",
     desc: "This workshop provided a complete overview of the Microsoft Learn Student Ambassadors (MLSA) program.",
     details: "This workshop provided a complete overview of the Microsoft Learn Student Ambassadors (MLSA) program. Speakers Sam Prince and Syed Omar shared insights into the program’s mission, benefits like Azure credits and LinkedIn Premium, and the application process. Attendees left motivated and informed about how to grow as student tech leaders through MLSA.",
-    bg: "bg-[#ffdfe8]",
-    border: "border-[#E8A2B5]",
-    text: "text-[#6d1c22]",
-    borderColor: "#E8A2B5",
+    bg: "bg-[#C5FFD8]",
+    border: "border-[#ABEEAB]",
+    text: "text-[#095709]",
+    borderColor: "#ABEEAB",
   },
 ];
 
@@ -221,7 +221,7 @@ const LandingPage = () => {
   };
 
   const getCardClass = (event: typeof events[0]) =>
-    `pixel-corners font-press-start ${event.bg} ${event.text} cursor-pointer transition-all duration-200${openCard === null ? " hover:scale-105 hover:shadow-xl" : ""
+    `pixel-corners font-press-start ${event.bg} ${event.text} cursor-pointer transition-all duration-200${openCard === null ? " hover:scale-105 hover:shadow-xl hover:bg-[shadow] hover:text-black" : ""
     }`;
 
   return (
@@ -349,22 +349,22 @@ const LandingPage = () => {
               key={i}
               className={getCardClass(event)}
               style={{
-                width: "min(19.7vw, 300px)",
-                height: "min(19.7vw, 300px)",
+                width: "min(20vw, 340px)",
+                height: "min(30vh, 308px)",
                 borderRadius: "0px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
                 justifyContent: "flex-start",
                 fontWeight: "bold",
-                padding: "15px",
+                padding: "5px",
                 position: "relative",
                 boxSizing: "border-box",
                 border: `14px solid ${event.borderColor}`,
               }}
               onClick={() => setOpenCard(i)}
             >
-              <span style={{ fontSize: "min(1.6vw, 24px)" }}>{event.title}</span>
+              <span style={{ fontSize: "min(1.4vw, 20px)" }}>{event.title}</span>
               <p
                 className="info-text font-normal mt-4"
                 style={{
@@ -428,22 +428,22 @@ const LandingPage = () => {
               key={i + 3}
               className={getCardClass(event)}
               style={{
-                width: "min(19.7vw, 300px)",
-                height: "min(19.7vw, 300px)",
+                width: "min(20vw, 340px)",
+                height: "min(30vh, 308px)",
                 borderRadius: "0px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
                 justifyContent: "flex-start",
                 fontWeight: "bold",
-                padding: "15px",
+                padding: "25px",
                 position: "relative",
                 boxSizing: "border-box",
                 border: `12px solid ${event.borderColor}`,
               }}
               onClick={() => setOpenCard(i + 3)}
             >
-              <span style={{ fontSize: "min(1.6vw, 24px)" }}>{event.title}</span>
+              <span style={{ fontSize: "min(1.2vw, 24px)" }}>{event.title}</span>
               <p
                 className="info-text font-normal mt-4"
                 style={{
