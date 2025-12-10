@@ -1,21 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
+interface YearButtonProps {
+  selectedTenure: string | null;
+  onTenureChange: (tenure: string) => void;
+}
 
-
-const YearButton: React.FC = () => {
+const YearButton: React.FC<YearButtonProps> = ({ selectedTenure, onTenureChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
-  const years = [2021, 2022, 2023, 2024, 2025];
+  const tenures = [
+    { label: '2025-2026', value: '2025-2026' },
+    { label: '2024-2025', value: '2024-2025' },
+    { label: '2023-2024', value: '2023-2024' },
+  ];
 
-  const handleYearClick = (year: number) => {
-    setSelectedYear(year);
+  const handleTenureClick = (tenure: string) => {
+    onTenureChange(tenure);
     setIsOpen(false);
   };
 
-  // Optional: click outside to close
+  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -27,40 +33,48 @@ const YearButton: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative inline-block" ref={ref}>
-      {/* IMAGE BUTTON */}
-      <div
-        className="cursor-pointer"
+    <div className="relative inline-block z-20" ref={ref}>
+      {/* Main Button */}
+      <button
+        className="relative w-[296px] h-[74px] flex items-center justify-center border-none bg-transparent p-0 outline-none focus:outline-none focus-visible:outline-none cursor-pointer"
         onClick={() => setIsOpen((prev) => !prev)}
+        style={{ outline: 'none' }}
       >
         <Image
           src="/images/tenure.png"
-          alt="Year Button"
+          alt="Select Tenure"
           width={296}
           height={74}
-          className="rounded-full"
+          className="absolute inset-0"
         />
-      </div>
+      </button>
 
-      {/* DROPDOWN */}
+      {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute mt-2 w-32 rounded bg-white shadow border border-gray-300 z-20 text-black">
-          {years.map((year) => (
-            <div
-              key={year}
-              className="cursor-pointer px-3 py-2 hover:bg-gray-100"
-              onClick={() => handleYearClick(year)}
-            >
-              {year}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* OPTIONAL: Selected Year Overlay */}
-      {selectedYear && (
-        <div className="text-sm mt-1 text-center">
-          Selected: {selectedYear}
+        <div className="absolute mt-2 w-[296px] z-30">
+          <div className="relative">
+            <Image
+              src="/images/tenure-dd.png"
+              alt="Tenure Dropdown"
+              width={296}
+              height={222}
+              className="w-full"
+            />
+            {tenures.map((tenure, index) => (
+              <div
+                key={tenure.value}
+                className="absolute cursor-pointer"
+                onClick={() => handleTenureClick(tenure.value)}
+                style={{
+                  top: `${20 + index * 63}px`,
+                  left: '0',
+                  width: '296px',
+                  height: '63px',
+                }}
+              >
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
