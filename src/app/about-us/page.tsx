@@ -186,7 +186,7 @@ const AboutUsPage: React.FC = () => {
     document.documentElement.style.overflowY = "hidden";
   }, []);
 
-  const lift = 36;
+  const lift = 80;
 
   return (
     <>
@@ -259,7 +259,7 @@ const AboutUsPage: React.FC = () => {
             dotColor="#8f6200"
             title="About MIC"
             desc="The MIC at VIT Chennai is a student-led tech community under the(MLSA) program. It's a space where students explore and innovate with technologies like AI, Azure, and GitHub. Whether you're a beginner or a builder, we offer an inclusive platform for collaboration, curiosity, and hands-on learning through real-world experiences."
-            style={{ marginTop: lift }}
+            style={{ marginTop: 0 }}
           />
           <MysteryCard
             frameColor="#f7a8a8"
@@ -267,7 +267,7 @@ const AboutUsPage: React.FC = () => {
             dotColor="#a13b48"
             title="What we do!"
             desc="We host hands-on workshops, speaker sessions, and hackathons focused on Microsoft technologies like Azure, Power Platform, and Copilot. These events help students build skills, explore emerging tech, and grow into confident, well-rounded tech leaders."
-            style={{ marginTop: 0 }}
+            style={{ marginTop: lift }}
           />
           <MysteryCard
             frameColor="#7faee3"
@@ -275,7 +275,7 @@ const AboutUsPage: React.FC = () => {
             dotColor="#294771"
             title="What you get!"
             desc="We focus on leadership, teamwork, and communication alongside coding. Our club supports personal and professional growth, helping members build confidence and strong networks. No matter your background, you'll find a welcoming community that learns, creates, and grows together."
-            style={{ marginTop: lift }}
+            style={{ marginTop: 0}}
           />
         </div>
       </div>
@@ -321,7 +321,7 @@ const AboutUsPage: React.FC = () => {
           flex-direction: row;
           flex-wrap: nowrap;
           justify-content: center;
-          align-items: flex-end;
+          align-items: flex-start;
           gap: 32px;
           width: 100%;
           margin: 0 auto;
