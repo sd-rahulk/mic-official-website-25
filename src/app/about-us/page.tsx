@@ -213,7 +213,7 @@ const AboutUsPage: React.FC = () => {
               position: "absolute",
               top: pos.top,
               left: pos.left,
-              zIndex: 2,
+              zIndex: 0,
               pointerEvents: "none",
               userSelect: "none",
               opacity: 0.98,
