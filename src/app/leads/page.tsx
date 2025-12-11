@@ -253,7 +253,12 @@ const MeetTheBoardPage: React.FC = () => {
             >
               <img src="/images/button-gold.svg" className={`absolute inset-0 w-full h-full ${view === 'board' ? 'opacity-100' : 'opacity-0'}`} alt="" />
               <img src="/images/button-peach.svg" className={`absolute inset-0 w-full h-full ${view === 'board' ? 'opacity-0' : 'opacity-100'}`} alt="" />
-              <span className="font-press-start text-[16px] sm:text-[24px] text-black z-10">BOARD</span>
+              <span
+                className="font-press-start text-[16px] sm:text-[24px] text-black z-10 leading-none flex items-center justify-center"
+                style={{ lineHeight: "1", marginTop: "-16px" }}
+              >
+                BOARD
+              </span>
             </button>
 
             {/* Departments Button */}
@@ -265,7 +270,12 @@ const MeetTheBoardPage: React.FC = () => {
             >
               <img src="/images/button-gold.svg" className={`absolute inset-0 w-full h-full ${view === 'departments' ? 'opacity-100' : 'opacity-0'}`} alt="" />
               <img src="/images/button-peach.svg" className={`absolute inset-0 w-full h-full ${view === 'departments' ? 'opacity-0' : 'opacity-100'}`} alt="" />
-              <span className="font-press-start text-[16px] sm:text-[24px] text-black z-10">DEPARTMENTS</span>
+              <span
+                className="font-press-start text-[16px] sm:text-[24px] text-black z-10 leading-none flex items-center justify-center"
+                style={{ lineHeight: "1", marginTop: "-16px" }}
+              >
+                DEPARTMENTS
+              </span>
             </button>
           </div>
 
