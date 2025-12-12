@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import consoleImg from "./assets/console.png";
+import consoleOff from "./assets/consoleoff.svg";
+import consoleOn from "./assets/consoleon.svg";
 
-export default function Console() {
+export default function Console({ poweredOn }: { poweredOn: boolean }) {
   return (
     <div className="w-screen h-screen relative overflow-hidden flex items-center justify-center">
       <Image
-        src={consoleImg}
-        alt="Console"
-        className="w-screen h-screen object-cover scale-[2] origin-center"
+        src={poweredOn ? consoleOn : consoleOff}
+        alt={poweredOn ? "Console On" : "Console Off"}
+        className="w-full h-full object-contain"
+        priority
       />
     </div>
   );
