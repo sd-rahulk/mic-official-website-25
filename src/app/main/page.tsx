@@ -176,7 +176,7 @@ const LandingPage = () => {
         rel="noopener noreferrer"
         className="absolute top-1 right-52 z-50"
       >
-        <Image
+        <Image className = "Animated-Logo"
           src="/insta.svg"
           alt="Instagram Logo"
           width={72}
@@ -191,7 +191,7 @@ const LandingPage = () => {
         rel="noopener noreferrer"
         className="absolute top-1 right-28 z-50"
       >
-        <Image
+        <Image className = "Animated-Logo"
           src="/linkedin.svg"
           alt="LinkedIn Logo"
           width={72}
@@ -206,7 +206,7 @@ const LandingPage = () => {
         rel="noopener noreferrer"
         className="absolute top-1 right-5 z-50"
       >
-        <Image
+        <Image className = "Animated-Logo"
           src="/mail.svg"
           alt="Mail Logo"
           width={72}
