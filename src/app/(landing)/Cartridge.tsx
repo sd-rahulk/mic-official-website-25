@@ -18,7 +18,6 @@ export default function Cartridge({
         inserted ? "top-[-2%]" : "top-[-50%]"
       )}
       onClick={!inserted ? onClick : undefined}
-      title={!inserted ? "Click to insert cartridge" : ""}
     >
       <Image src={cartridgeImg} alt="Cartridge" className="w-full h-auto" />
     </div>
