@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo, useMemo } from 'react';
 import Image from 'next/image';
 import PresidentCard from './components/PresidentCard';
 import VicePresidentCard from './components/VicePresidentCard';
@@ -75,6 +75,34 @@ function useCloudFloat({ baseTop, baseLeft, amplitude = 30, speed = 1, phase = 0
   return { top, left: baseLeft };
 }
 
+const Cloud = memo(({ 
+  position, 
+  src, 
+  index, 
+  view 
+}: { 
+  position: { top: string | number; left: string | number }; 
+  src: string; 
+  index: number;
+  view: 'board' | 'departments';
+}) => (
+  <Image
+    src={src}
+    alt={`Cloud ${index + 1}`}
+    width={355}
+    height={228}
+    style={{ 
+      position: view === 'board' ? 'absolute' : 'fixed',
+      top: position.top,
+      left: position.left,
+      zIndex: 2,
+      pointerEvents: 'none'
+    }}
+  />
+));
+
+Cloud.displayName = 'Cloud';
+
 const MeetTheBoardPage: React.FC = () => {
   const [view, setView] = useState<'board' | 'departments'>('board');
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -93,6 +121,13 @@ const MeetTheBoardPage: React.FC = () => {
     useCloudFloat({ baseTop: 127.98, baseLeft: 1600, amplitude: 27, speed: 1.3, phase: 5 }),
     useCloudFloat({ baseTop: 600, baseLeft: 1600, amplitude: 22, speed: 1.05, phase: 6 }),
   ];
+
+  const cloudImages = useMemo(() => [
+    '/images/cloud1.png', '/images/cloud2.png', '/images/cloud1.png',
+    '/images/cloud3.png', '/images/cloud3.png', '/images/cloud2.png',
+    '/images/cloud1.png', '/images/cloud3.png', '/images/cloud2.png',
+    '/images/cloud1.png'
+  ], []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -211,28 +246,17 @@ const MeetTheBoardPage: React.FC = () => {
             userSelect: "none",
           }}
         >
-          {/* Clouds */}
-          {(() => {
-            const cloudImages = [
-              '/images/cloud1.png', '/images/cloud2.png', '/images/cloud1.png',
-              '/images/cloud3.png', '/images/cloud3.png', '/images/cloud2.png',
-              '/images/cloud1.png', '/images/cloud3.png', '/images/cloud2.png',
-              '/images/cloud1.png'
-            ];
+          {cloudPositions.map((pos, i) => (
+            <Cloud 
+              key={i}
+              position={pos}
+              src={cloudImages[i]}
+              index={i}
+              view={view}
+            />
+          ))}
 
-            return cloudPositions.map((pos, i) => (
-              <Image
-                key={i}
-                src={cloudImages[i]}
-                alt={`Cloud ${i + 1}`}
-                width={355}
-                height={228}
-                style={{ position: 'absolute', ...pos, zIndex: 2 }}
-              />
-            ));
-          })()}
-
-          {/* Stars / Dots - only show in departments view */}
+          {/* Stars / Dots - only show in departments view
           {view === 'departments' && (
             <div style={{ position: 'absolute', top: 0, left: 0, width: 1154, height: 364, zIndex: 2 }}>
               <svg width="1154" height="364" viewBox="0 0 1154 364" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -246,7 +270,21 @@ const MeetTheBoardPage: React.FC = () => {
                 <ellipse cx="1084.3" cy="299" rx="3.98" ry="4" fill="white" />
               </svg>
             </div>
-          )}
+          )} */}
+
+          {/* Stars / Dots - show in both views */}
+          <div style={{ position: view === 'board' ? 'absolute' : 'fixed', top: 0, left: 0, width: 1154, height: 364, zIndex: 2 }}>
+            <svg width="1154" height="364" viewBox="0 0 1154 364" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="1150.02" cy="55" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="949.88" cy="19" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="203.12" cy="4" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="134.42" cy="211" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="3.98" cy="360" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="486.89" cy="95" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="677.07" cy="47" rx="3.98" ry="4" fill="white" />
+              <ellipse cx="1084.3" cy="299" rx="3.98" ry="4" fill="white" />
+            </svg>
+          </div>
 
           {/* Heading */}
           <h1 className={`${themeColors.textColor} font-press-start z-10 text-center mb-6`}
