@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 const ClubLogo = () => (
@@ -29,7 +30,7 @@ const Cube = () => (
     style={{
       position: 'absolute',
       left: '50%',
-      top: 210,
+      top: 240,
       transform: 'translateX(-50%)',
       zIndex: 11,
     }}
@@ -113,6 +114,8 @@ const Clouds = ({ clouds }: { clouds: { top: number; left: number }[] }) => (
 
 const LandingPage = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showLeaderboardWidget, setShowLeaderboardWidget] = useState(false);
+  const [animationStep, setAnimationStep] = useState(0);
 
   const cloudPositions = [
     { baseTop: 154, baseLeft: -12, amplitude: 25, speed: 0.8, phase: 0 },
@@ -133,6 +136,27 @@ const LandingPage = () => {
       document.body.style.overflow = "auto"; 
     };
   }, []);
+
+  // Manage animation sequence steps
+  useEffect(() => {
+    if (showLeaderboardWidget) {
+      const timer3 = setTimeout(() => setAnimationStep(3), 1200); // Podium emerge
+      const timer4 = setTimeout(() => setAnimationStep(4), 2000); // Ghosts appear
+      const timer5 = setTimeout(() => setAnimationStep(5), 2500); // Red banner
+      const timer6 = setTimeout(() => setAnimationStep(6), 3500); // Blue banner
+      const timer7 = setTimeout(() => setAnimationStep(7), 4500); // Green banner
+
+      return () => {
+        clearTimeout(timer3);
+        clearTimeout(timer4);
+        clearTimeout(timer5);
+        clearTimeout(timer6);
+        clearTimeout(timer7);
+      };
+    } else {
+      setAnimationStep(0);
+    }
+  }, [showLeaderboardWidget]);
 
    const getThemeColors = () => {
     return isDarkMode
@@ -215,20 +239,150 @@ const LandingPage = () => {
           priority
         />
       </a>
-      <a
-        href="/leaderboard"
-        rel="noopener noreferrer"
-        className="absolute bottom-12 left-11 z-50"
+      {/* Trophy Icon - Static bottom-left position */}
+      <button
+        id="trophy-icon"
+        type="button"
+        aria-label="Show leaderboard preview"
+        className="absolute bottom-8 left-8 z-50 hover:scale-110 transition-transform duration-200"
+        onClick={() => {
+          if (!showLeaderboardWidget) {
+            setShowLeaderboardWidget(true);
+          } else {
+            setShowLeaderboardWidget(false);
+            setAnimationStep(0);
+          }
+        }}
+        style={{
+          opacity: showLeaderboardWidget ? 0 : 1,
+          transition: "opacity 0.4s ease-out",
+        }}
       >
         <Image
           src="/cup_home.svg"
           alt="Leaderboard Logo"
-          width={72}
-          height={78}
-          style={{ width: "90vw", maxWidth: 72, height: "auto", display: "block" }}
+          width={48}
+          height={52}
+          style={{ display: "block" }}
           priority
         />
-      </a>
+      </button>
+
+      {/* Animation Container - Hidden by default */}
+      <div
+        style={{
+          opacity: showLeaderboardWidget ? 1 : 0,
+          pointerEvents: showLeaderboardWidget ? "auto" : "none",
+          transition: "opacity 0.3s ease-out",
+        }}
+      >
+        <AnimatePresence>
+          {showLeaderboardWidget && (
+            <>
+              {/* Yellow Square Box - Moves slightly right */}
+              {animationStep < 5 && (
+                <motion.div
+                  id="leaderboard-box"
+                  initial={{ 
+                    opacity: 0,
+                    left: 32,
+                    bottom: 32,
+                    scale: 0.6
+                  }}
+                  animate={{ 
+                    opacity: 1,
+                    left: 150,
+                    bottom: 32,
+                    scale: 1,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+                  style={{
+                    position: "absolute",
+                    width: 50,
+                    height: 50,
+                    background: "#FFEE99",
+                    border: "3px solid #000000",
+                    boxSizing: "border-box",
+                    zIndex: 45,
+                  }}
+                />
+              )}
+
+              {/* Banners replace yellow box at exact same position */}
+              {animationStep >= 5 && (
+                <motion.div
+                  className="absolute z-50"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    left: 150,
+                    bottom: 32,
+                  }}
+                >
+                  <AnimatePresence mode="wait">
+                    {animationStep === 5 && (
+                      <motion.div
+                        key="banner-1"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <Image
+                          src="/1ST.png"
+                          alt="1st place banner"
+                          width={300}
+                          height={400}
+                          style={{ imageRendering: "pixelated", display: "block" }}
+                        />
+                      </motion.div>
+                    )}
+                    {animationStep === 6 && (
+                      <motion.div
+                        key="banner-2"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <Image
+                          src="/2ND.png"
+                          alt="2nd place banner"
+                          width={300}
+                          height={400}
+                          style={{ imageRendering: "pixelated", display: "block" }}
+                        />
+                      </motion.div>
+                    )}
+                    {animationStep === 7 && (
+                      <motion.div
+                        key="banner-3"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <Image
+                          src="/3RD.png"
+                          alt="3rd place banner"
+                          width={300}
+                          height={400}
+                          style={{ imageRendering: "pixelated", display: "block" }}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+
+
+            </>
+          )}
+        </AnimatePresence>
+      </div>
 
       <Clouds clouds={cloudPositions} />
       <ClubLogo />

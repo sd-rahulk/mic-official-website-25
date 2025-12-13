@@ -6,6 +6,7 @@ export { CloudComponent } from './Cloud';
 export { Clouds } from './Clouds';
 export { LeaderboardTable } from './LeaderboardTable';
 export { Podium } from './Podium';
+export { RankingBanner } from './RankingBanner';
 
 // Hooks
 export { useCloudFloat } from '@/hooks/useCloudFloat';
